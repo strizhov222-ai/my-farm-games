@@ -1,327 +1,360 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#4f9b48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Моя ферма</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,Arial,sans-serif;color:#26382b;background:linear-gradient(#dff3ff,#eef9e8 280px,#f5f1d8);min-height:100vh}
-button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}
-.app{width:min(100%,720px);margin:auto;padding:14px 12px 30px}
-header{background:linear-gradient(135deg,#65b451,#2f7f43);color:white;border-radius:20px;padding:17px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 5px #286a39}
-h1{font-size:25px;margin:0 0 4px}.subtitle{font-size:12px}
-.balance{background:#fff1b8;color:#654b0d;padding:10px;border-radius:12px;font-weight:800;white-space:nowrap}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
-.stat{background:white;border:2px solid #d7e9ca;border-radius:14px;padding:9px 4px;text-align:center}
-.stat .emoji{font-size:23px}.stat strong{display:block;font-size:20px}.stat span:last-child{font-size:12px;color:#6d7b6f}
-.panel{background:#ffffffed;border:2px solid #d8e8ce;border-radius:18px;padding:13px;margin:13px 0;box-shadow:0 4px #55824315}
-h2{font-size:19px;margin:0 0 12px;color:#2e6638}
-.scene{background:linear-gradient(#b8e8ff 0 42%,#9bdc78 42%);border-radius:14px;padding:10px}
-.scene-top{display:flex;justify-content:space-between;font-size:12px;font-weight:bold}
-.animals,.shop-grid,.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
-.animal,.shop-item,.product{background:#fff;border:2px solid #dce9d5;border-radius:14px;padding:11px 8px;text-align:center;min-width:0}
-.animal .big,.shop-item .big{font-size:39px}
-h3{font-size:16px;margin:4px 0}
-.animal p,.shop-item p,.product small{font-size:12px;color:#6d7b6f;margin:5px 0 9px}
-.btn{width:100%;border-radius:11px;padding:10px 7px;background:#4f9b48;color:white;font-weight:800;box-shadow:0 3px #347437}
-.btn:disabled{background:#b8c3b5;box-shadow:0 3px #929d8f;cursor:not-allowed}
-.btn.gold{background:#efb92e;color:#523c0a;box-shadow:0 3px #bd8b16}
-.notice{font-size:12px;color:#6d7b6f;line-height:1.5}
-.product{background:#fffdf5;border-color:#eee3bd}
-.product .big{font-size:30px}
-.product strong{display:block;margin:4px 0 8px}
-footer{text-align:center;color:#71816e;font-size:12px;padding:8px}
-#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,15px);background:#243b29;color:white;padding:12px 16px;border-radius:13px;width:max-content;max-width:90%;text-align:center;opacity:0;pointer-events:none;transition:.2s;z-index:10;box-shadow:0 4px 16px #0003}
-#toast.show{opacity:1;transform:translate(-50%,0)}
-@media(min-width:560px){.animals,.shop-grid,.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(#a9e7ff,#e8ffd7);
+  color:#24452c;
+}
+header{
+  background:#378b43;
+  color:white;
+  text-align:center;
+  padding:18px 10px;
+}
+h1{margin:0;font-size:28px}
+main{max-width:700px;margin:auto;padding:14px}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.stat,.panel{
+  background:white;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 3px 8px #0001;
+}
+.stat{text-align:center;font-weight:bold}
+h2{margin:0 0 12px}
+.panel{margin-top:14px}
+.animals{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.animal{
+  background:#f1f9e8;
+  border-radius:12px;
+  text-align:center;
+  padding:12px 4px;
+}
+.emoji{font-size:42px}
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 8px;
+  background:#4caf50;
+  color:white;
+  font-weight:bold;
+  font-size:14px;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+button:active{transform:scale(.97)}
+button:disabled{background:#aaa;cursor:not-allowed}
+.animal button{width:100%;margin-top:8px}
+.actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+.actions button{width:100%}
+.shop-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
+.shop-item:last-child{border:0}
+.small{font-size:13px;color:#607365}
+#message{
+  min-height:22px;
+  text-align:center;
+  margin-top:12px;
+  font-weight:bold;
+}
+footer{text-align:center;padding:18px;font-size:12px}
 </style>
 </head>
 <body>
-<div class="app">
+
 <header>
- <div><h1>🌻 Моя ферма</h1><div class="subtitle">Расти, собирай и зарабатывай!</div></div>
- <div class="balance">🪙 <span id="coins">100</span></div>
+  <h1>🌻 Моя ферма 🌻</h1>
+  <div>Развивай ферму и заботься о животных!</div>
 </header>
 
-<div class="stats">
- <div class="stat"><span class="emoji">🥚</span><strong id="eggs">0</strong><span>Яйца</span></div>
- <div class="stat"><span class="emoji">🥛</span><strong id="milk">0</strong><span>Молоко</span></div>
- <div class="stat"><span class="emoji">⭐</span><strong id="level">1</strong><span>Уровень</span></div>
-</div>
+<main>
+  <div class="stats">
+    <div class="stat">🪙 Монеты<br><span id="coins">100</span></div>
+    <div class="stat">⭐ Уровень<br><span id="level">1</span></div>
+    <div class="stat">🥚 Яйца<br><span id="eggs">0</span></div>
+    <div class="stat">🥛 Молоко<br><span id="milk">0</span></div>
+    <div class="stat">🐔 Куры<br><span id="chickens">1</span></div>
+    <div class="stat">🐄 Коровы<br><span id="cows">1</span></div>
+  </div>
 
-<section class="panel">
- <h2>🏡 Твоя ферма</h2>
- <div class="scene">
-  <div class="scene-top"><span>☀️ Хороший день!</span><span id="animal-count">Животных: 0</span></div>
-  <div class="animals" id="animals"></div>
- </div>
- <p class="notice">Купи животных в магазине. Подожди, пока продукты будут готовы, и нажми кнопку сбора.</p>
-</section>
+  <section class="panel">
+    <h2>🐾 Мои животные</h2>
+    <div class="animals">
+      <div class="animal">
+        <div class="emoji">🐔</div>
+        <b>Курица</b>
+        <p class="small">Несёт яйца</p>
+        <button onclick="collectEggs()">🥚 Собрать</button>
+      </div>
+      <div class="animal">
+        <div class="emoji">🐄</div>
+        <b>Корова</b>
+        <p class="small">Даёт молоко</p>
+        <button onclick="collectMilk()">🥛 Подоить</button>
+      </div>
+      <div class="animal">
+        <div class="emoji">🐷</div>
+        <b>Свинья</b>
+        <p class="small">Помогает ферме</p>
+        <button onclick="feedPig()">🌽 Покормить</button>
+      </div>
+    </div>
+  </section>
 
-<section class="panel">
- <h2>🧺 Склад и продажа</h2>
- <div class="product-grid">
-  <div class="product"><div class="big">🥚</div><strong>Яйца: <span id="eggs-stock">0</span></strong><small>5 монет за яйцо</small><button class="btn gold" id="sell-eggs">Продать яйца</button></div>
-  <div class="product"><div class="big">🥛</div><strong>Молоко: <span id="milk-stock">0</span></strong><small>8 монет за порцию</small><button class="btn gold" id="sell-milk">Продать молоко</button></div>
- </div>
- <p class="notice">Проданные продукты исчезают со склада, а монеты поступают на баланс.</p>
-</section>
+  <section class="panel">
+    <h2>🛒 Продажа продуктов</h2>
+    <p>🥚 Одно яйцо — 5 монет</p>
+    <p>🥛 Одна порция молока — 8 монет</p>
+    <div class="actions">
+      <button onclick="sellEggs()">Продать все яйца</button>
+      <button onclick="sellMilk()">Продать всё молоко</button>
+    </div>
+  </section>
 
-<section class="panel">
- <h2>🛒 Магазин животных</h2>
- <div class="shop-grid" id="shop"></div>
- <p class="notice">Каждое животное увеличивает количество продуктов, которые ты получаешь за один сбор.</p>
-</section>
-<footer>🌱 Удачи на ферме!</footer>
-</div>
-<div id="toast" role="status" aria-live="polite"></div>
+  <section class="panel">
+    <h2>🏪 Магазин животных</h2>
+    <div class="shop-item">
+      <div>🐔 Курица<br><span class="small">Цена: 30 монет</span></div>
+      <button onclick="buyAnimal('chicken')">Купить</button>
+    </div>
+    <div class="shop-item">
+      <div>🐄 Корова<br><span class="small">Цена: 70 монет</span></div>
+      <button onclick="buyAnimal('cow')">Купить</button>
+    </div>
+    <div class="shop-item">
+      <div>🐷 Свинья<br><span class="small">Цена: 50 монет</span></div>
+      <button onclick="buyAnimal('pig')">Купить</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>📈 Развитие фермы</h2>
+    <p>Опыт: <b id="xp">0</b> / <b id="nextXp">100</b></p>
+    <div style="height:14px;background:#e5eee3;border-radius:20px;overflow:hidden">
+      <div id="progress" style="height:100%;width:0%;background:#4caf50"></div>
+    </div>
+    <p class="small">Зарабатывай монеты и получай опыт!</p>
+  </section>
+
+  <div id="message" role="status" aria-live="polite"></div>
+  <div class="actions" style="margin-top:12px">
+    <button onclick="saveGame()">💾 Сохранить</button>
+    <button onclick="resetGame()">🔄 Новая игра</button>
+  </div>
+</main>
+
+<footer>🌱 Моя ферма — твой маленький мир!</footer>
 
 <script>
-(function(){
-"use strict";
-
-const KEY="moyaFermaSave_v1";
-
-const TYPES={
- chicken:{id:"chicken",name:"Курица",emoji:"🐔",price:30,interval:10,amount:2,description:"2 яйца каждые 10 секунд",button:"Собрать яйца"},
- cow:{id:"cow",name:"Корова",emoji:"🐮",price:70,interval:15,amount:1,description:"1 молоко каждые 15 секунд",button:"Собрать молоко"},
- pig:{id:"pig",name:"Поросёнок",emoji:"🐷",price:50,interval:20,amount:5,description:"5 монет каждые 20 секунд",button:"Получить монеты"}
+const defaults = {
+  coins: 100,
+  eggs: 0,
+  milk: 0,
+  chickens: 1,
+  cows: 1,
+  pigs: 0,
+  xp: 0,
+  level: 1
 };
 
-function newState(){
- return {
-  coins:100,eggs:0,milk:0,level:1,xp:0,
-  animals:{chicken:0,cow:0,pig:0},
-  lastCollect:{chicken:0,cow:0,pig:0}
- };
+let game = loadGame();
+
+function loadGame() {
+  try {
+    const saved = localStorage.getItem("myFarmSave");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {...defaults, ...parsed};
+    }
+  } catch (error) {
+    console.warn("Не удалось загрузить сохранение", error);
+  }
+  return {...defaults};
 }
 
-function loadState(){
- try{
-  const saved=localStorage.getItem(KEY);
-  if(!saved)return newState();
-  const old=JSON.parse(saved);
-  const base=newState();
-  const result={...base,...old};
-  result.animals={...base.animals,...(old.animals||{})};
-  result.lastCollect={...base.lastCollect,...(old.lastCollect||{})};
-  ["coins","eggs","milk","level","xp"].forEach(k=>{
-   const n=Number(result[k]);
-   result[k]=Number.isFinite(n)?Math.max(0,Math.floor(n)):base[k];
-  });
-  return result;
- }catch(e){return newState();}
+function saveGame() {
+  try {
+    localStorage.setItem("myFarmSave", JSON.stringify(game));
+    showMessage("✅ Игра сохранена!");
+  } catch (error) {
+    showMessage("Не удалось сохранить игру");
+  }
 }
 
-let state=loadState();
-let toastTimer;
-
-function save(){
- try{localStorage.setItem(KEY,JSON.stringify(state));}
- catch(e){toast("Не удалось сохранить игру на устройстве.");}
+function showMessage(text) {
+  document.getElementById("message").textContent = text;
 }
 
-function toast(message){
- const el=document.getElementById("toast");
- el.textContent=message;
- el.classList.add("show");
- clearTimeout(toastTimer);
- toastTimer=setTimeout(()=>el.classList.remove("show"),2400);
+function addXP(amount) {
+  game.xp += amount;
+  while (game.xp >= game.level * 100) {
+    game.xp -= game.level * 100;
+    game.level++;
+    showMessage("🎉 Новый уровень: " + game.level + "!");
+  }
 }
 
-function number(n){
- return Math.max(0,Math.floor(Number(n)||0)).toLocaleString("ru-RU");
+function updateUI() {
+  document.getElementById("coins").textContent = game.coins;
+  document.getElementById("eggs").textContent = game.eggs;
+  document.getElementById("milk").textContent = game.milk;
+  document.getElementById("chickens").textContent = game.chickens;
+  document.getElementById("cows").textContent = game.cows;
+  document.getElementById("level").textContent = game.level;
+  document.getElementById("xp").textContent = game.xp;
+
+  const next = game.level * 100;
+  document.getElementById("nextXp").textContent = next;
+  document.getElementById("progress").style.width =
+    Math.min(100, game.xp / next * 100) + "%";
 }
 
-function addXP(amount){
- state.xp+=amount;
- let levelUp=false;
- while(state.xp>=state.level*20){
-  state.xp-=state.level*20;
-  state.level++;
-  levelUp=true;
- }
- if(levelUp)toast("Новый уровень! ⭐ Уровень "+state.level);
+function finishAction(message) {
+  updateUI();
+  saveSilently();
+  showMessage(message);
 }
 
-function buyAnimal(id){
- const type=TYPES[id];
- if(!type)return;
- if(state.coins<type.price){
-  toast("Не хватает монет 🪙");
-  return;
- }
- state.coins-=type.price;
- state.animals[id]++;
- save();
- render();
- toast("Куплено: "+type.emoji+" "+type.name+"!");
+function saveSilently() {
+  try {
+    localStorage.setItem("myFarmSave", JSON.stringify(game));
+  } catch (error) {
+    console.warn("Сохранение недоступно", error);
+  }
 }
 
-function collectAnimal(id){
- const type=TYPES[id];
- if(!type||state.animals[id]<=0){
-  toast("Сначала купи животное в магазине!");
-  return;
- }
-
- const now=Date.now();
- const last=state.lastCollect[id]||0;
- const wait=type.interval*1000-(now-last);
-
- if(last>0&&wait>0){
-  toast("Подожди ещё "+Math.ceil(wait/1000)+" сек. ⏳");
-  return;
- }
-
- const amount=type.amount*state.animals[id];
-
- if(id==="chicken"){
-  state.eggs+=amount;
-  toast("Собрано яиц: "+amount+" 🥚");
- }else if(id==="cow"){
-  state.milk+=amount;
-  toast("Собрано молока: "+amount+" 🥛");
- }else{
-  state.coins+=amount;
-  toast("Получено монет: "+amount+" 🪙");
- }
-
- state.lastCollect[id]=now;
- addXP(3);
- save();
- render();
+function collectEggs() {
+  if (game.chickens <= 0) {
+    showMessage("Сначала купи курицу!");
+    return;
+  }
+  const amount = game.chickens * 2;
+  game.eggs += amount;
+  addXP(amount);
+  finishAction("🥚 Собрано яиц: " + amount);
 }
 
-function sell(product){
- let amount,price;
- if(product==="eggs"){
-  amount=state.eggs;
-  price=5;
- }else{
-  amount=state.milk;
-  price=8;
- }
-
- if(amount<=0){
-  toast(product==="eggs"?"У тебя пока нет яиц 🥚":"У тебя пока нет молока 🥛");
-  return;
- }
-
- const earned=amount*price;
-
- if(product==="eggs")state.eggs=0;
- else state.milk=0;
-
- state.coins+=earned;
- addXP(Math.max(1,Math.floor(amount/2)));
- save();
- render();
- toast("Продано! Получено 🪙 "+earned);
+function collectMilk() {
+  if (game.cows <= 0) {
+    showMessage("Сначала купи корову!");
+    return;
+  }
+  const amount = game.cows;
+  game.milk += amount;
+  addXP(amount * 2);
+  finishAction("🥛 Получено молока: " + amount);
 }
 
-function renderAnimals(){
- const root=document.getElementById("animals");
- root.replaceChildren();
- let total=0;
-
- Object.values(TYPES).forEach(type=>{
-  const count=state.animals[type.id]||0;
-  total+=count;
-
-  const card=document.createElement("div");
-  card.className="animal";
-
-  const big=document.createElement("div");
-  big.className="big";
-  big.textContent=type.emoji;
-
-  const title=document.createElement("h3");
-  title.textContent=type.name+" × "+count;
-
-  const status=document.createElement("p");
-  const last=state.lastCollect[type.id]||0;
-  const remaining=last?Math.max(0,Math.ceil((last+type.interval*1000-Date.now())/1000)):0;
-
-  if(count===0)status.textContent="Пока нет животных";
-  else if(remaining===0)status.textContent="Продукты готовы!";
-  else status.textContent="Готово через "+remaining+" сек.";
-
-  const button=document.createElement("button");
-  button.className="btn";
-  button.textContent=count===0?"Купить в магазине":type.button;
-  button.disabled=count===0||(last>0&&remaining>0);
-  button.addEventListener("click",()=>collectAnimal(type.id));
-
-  card.append(big,title,status,button);
-  root.appendChild(card);
- });
-
- document.getElementById("animal-count").textContent="Животных: "+total;
+function sellEggs() {
+  if (game.eggs <= 0) {
+    showMessage("У тебя пока нет яиц!");
+    return;
+  }
+  const amount = game.eggs;
+  const earned = amount * 5;
+  game.eggs = 0;
+  game.coins += earned;
+  addXP(amount);
+  finishAction("💰 Продано яиц на " + earned + " монет!");
 }
 
-function renderShop(){
- const root=document.getElementById("shop");
- root.replaceChildren();
-
- Object.values(TYPES).forEach(type=>{
-  const card=document.createElement("div");
-  card.className="shop-item";
-
-  const big=document.createElement("div");
-  big.className="big";
-  big.textContent=type.emoji;
-
-  const title=document.createElement("h3");
-  title.textContent=type.name;
-
-  const desc=document.createElement("p");
-  desc.textContent=type.description;
-
-  const price=document.createElement("p");
-  price.textContent="Цена: 🪙 "+type.price;
-
-  const button=document.createElement("button");
-  button.className="btn";
-  button.textContent="Купить";
-  button.disabled=state.coins<type.price;
-  button.addEventListener("click",()=>buyAnimal(type.id));
-
-  card.append(big,title,desc,price,button);
-  root.appendChild(card);
- });
+function sellMilk() {
+  if (game.milk <= 0) {
+    showMessage("У тебя пока нет молока!");
+    return;
+  }
+  const amount = game.milk;
+  const earned = amount * 8;
+  game.milk = 0;
+  game.coins += earned;
+  addXP(amount * 2);
+  finishAction("💰 Продано молока на " + earned + " монет!");
 }
 
-function render(){
- document.getElementById("coins").textContent=number(state.coins);
- document.getElementById("eggs").textContent=number(state.eggs);
- document.getElementById("milk").textContent=number(state.milk);
- document.getElementById("eggs-stock").textContent=number(state.eggs);
- document.getElementById("milk-stock").textContent=number(state.milk);
- document.getElementById("level").textContent=number(state.level);
- document.getElementById("sell-eggs").disabled=state.eggs<=0;
- document.getElementById("sell-milk").disabled=state.milk<=0;
- renderAnimals();
- renderShop();
+function buyAnimal(type) {
+  const animals = {
+    chicken: {price: 30, field: "chickens", name: "курица"},
+    cow: {price: 70, field: "cows", name: "корова"},
+    pig: {price: 50, field: "pigs", name: "свинья"}
+  };
+
+  const animal = animals[type];
+  if (!animal) return;
+
+  if (game.coins < animal.price) {
+    showMessage("❌ Не хватает монет!");
+    return;
+  }
+
+  game.coins -= animal.price;
+  game[animal.field]++;
+  addXP(10);
+  finishAction("🎉 Куплена новая: " + animal.name + "!");
 }
 
-document.getElementById("sell-eggs").addEventListener("click",()=>sell("eggs"));
-document.getElementById("sell-milk").addEventListener("click",()=>sell("milk"));
+function feedPig() {
+  if (game.pigs <= 0) {
+    showMessage("🐷 Сначала купи свинью в магазине!");
+    return;
+  }
+  if (game.coins < 3) {
+    showMessage("Не хватает 3 монет на корм!");
+    return;
+  }
+  game.coins -= 3;
+  addXP(2);
+  finishAction("🌽 Свинья накормлена! +2 опыта");
+}
 
-render();
-setInterval(renderAnimals,1000);
+function resetGame() {
+  if (!confirm("Начать новую игру? Старый прогресс будет удалён.")) {
+    return;
+  }
+  game = {...defaults};
+  saveSilently();
+  updateUI();
+  showMessage("🌱 Новая ферма готова!");
+}
 
-try{
- if(window.Telegram&&window.Telegram.WebApp){
-  window.Telegram.WebApp.ready();
-  window.Telegram.WebApp.expand();
- }
-}catch(e){}
-
-})();
+updateUI();
 </script>
 </body>
 </html>
+
+   
+
+
+
+
+ 
+ 
+
+ 
+
+
+  
